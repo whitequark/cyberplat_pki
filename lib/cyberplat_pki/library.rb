@@ -80,10 +80,10 @@ module CyberplatPKI::Library
   attach_function :Crypt_OpenSecretKey, [:int, :string, :int, :string, :pointer], :int
 
   # int Crypt_OpenPublicKey(int eng, const char* src, int src_len, int keyserial, IPRIV_KEY* key, IPRIV_KEY* cakey)
-  attach_function :Crypt_OpenSecretKey, [:int, :string, :int, :int, :pointer, :pointer], :int
+  attach_function :Crypt_OpenPublicKey, [:int, :string, :int, :int, :pointer, :pointer], :int
 
   # int Crypt_Sign(const char* src, int src_len, char* dst, int dst_len, IPRIV_KEY* key);
-  attach_function :Crypt_Sign, [:string, :int, :string, :int, :pointer], :int
+  attach_function :Crypt_Sign, [:string, :int, :pointer, :int, :pointer], :int
 
   # int Crypt_Verify(const char* src, int src_len, const char** pdst, int* pndst,IPRIV_KEY* key);
   attach_function :Crypt_Verify, [:string, :int, :pointer, :pointer, :pointer], :int
@@ -94,14 +94,17 @@ module CyberplatPKI::Library
   # int Crypt_Done(void)
   attach_function :Crypt_Done, [], :int
 
-  def self.handle_error(retval)
-    if retval != 0
+  def self.handle_error(function, retval)
+    if retval < 0
       error = Errors[retval] || "UNKNOWN"
-      raise "CyberplatPKI: Cannot invoke Crypt_#{function}: #{error} (#{retval})"
+      raise "CyberplatPKI: Cannot invoke #{function}: #{error} (#{retval})"
     end
+
+    retval
   end
 
   def self.invoke(function, *args)
-    handle_error(send(:"Crypt_#{function}", *args))
+    function = :"Crypt_#{function}"
+    handle_error(function, send(function, *args))
   end
 end

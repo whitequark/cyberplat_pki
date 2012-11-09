@@ -13,14 +13,13 @@ describe CyberplatPKI::Key do
   end
 
   it "fails loading public key from invalid source" do
-    pending
     lambda {
       CyberplatPKI::Key.new_public(@pubkey, 12345)
-    }.should raise_error()
+    }.should raise_error(/PUB_KEY_NOT_FOUND/)
 
     lambda {
       CyberplatPKI::Key.new_public("foo", 17033)
-    }.should raise_error()
+    }.should raise_error(/PUB_KEY_NOT_FOUND/)
   end
 
   it "should load private keys" do
@@ -30,20 +29,18 @@ describe CyberplatPKI::Key do
   end
 
   it "fails loading private key from invalid source" do
-    pending
     lambda {
       CyberplatPKI::Key.new_private("foo", '1111111111')
-    }.should raise_error
+    }.should raise_error(/INVALID_FORMAT/)
   end
 
   it "fails loading private key with invalid password" do
-    pending
     lambda {
       CyberplatPKI::Key.new_private(@seckey, 'foo')
-    }.should raise_error
+    }.should raise_error(/INVALID_PASSWD/)
   end
 
-  SIGNED = <<-SIGNED.rstrip.freeze
+  SIGNED = <<-SIGNED.gsub("\n", "\r\n").freeze
 0000027201SM000000110000001100000125
 api17032            00017033
                     00000000
@@ -51,25 +48,30 @@ BEGIN
 Hello world
 END
 BEGIN SIGNATURE
-iQBRAwkBAABCiVCdLGsBAWxqAf9KzuezPsLJV6221uXNLzqG5Bc86dLCenvdgY+K
-Qj3H3d0ogyGuZ4O1UvdrlLDKDdbCanYrXAHQAYOE65d2ax7GsAHH
-=mQ/Y
+iQBRAwkBAABCiVCdMQoBAcf2AfwOYzgQxyj1jwRv/6JdjCFh+lguLENscUFfaNXu
+OIi4jaGbW8jFrxnUj5AaoeA/WJtFuBayNdBmyiQpeisngU6XsAHH
+=z1vE
 END SIGNATURE
   SIGNED
 
-  it "can sign a block" do
+  it "can sign and then verify block" do
     privkey = CyberplatPKI::Key.new_private(@seckey, '1111111111')
-    privkey.sign("Hello world").should == SIGNED
+    pubkey = CyberplatPKI::Key.new_public(@pubkey, 17033)
+
+    signed = privkey.sign("Hello world")
+    pubkey.verify(signed).should be_true
   end
 
   it "can verify a block" do
     pubkey = CyberplatPKI::Key.new_public(@pubkey, 17033)
+
     pubkey.verify(SIGNED).should be_true
   end
 
   it "fails verifying an invalid block" do
     pubkey = CyberplatPKI::Key.new_public(@pubkey, 17033)
-    fail_signed = SIGNED.sub('BAABC', 'BAAAC')
+
+    fail_signed = SIGNED.sub('world', 'wor1d')
     pubkey.verify(fail_signed).should be_false
   end
 end

@@ -37,9 +37,14 @@ module CyberplatPKI
 
     def initialize(internal)
       @internal = internal
-      define_finalizer(self, lambda {
-        Library.invoke :CloseKey, internal
-      })
+      if defined?(ObjectSpace) &&
+           ObjectSpace.respond_to?(:define_finalizer)
+        ObjectSpace.define_finalizer(self, lambda {
+          Library.invoke :CloseKey, internal
+        })
+      else
+        warn "No ObjectSpace.define_finalizer; Crypt_CloseKey will not be called."
+      end
     end
 
     def sign(data)
@@ -48,19 +53,26 @@ module CyberplatPKI
       # I sincerely hope this does not segfault in production.
       result = FFI::MemoryPointer.new(:char, data.length + 1024)
 
-      Library.invoke :Sign,
+      result_length = Library.invoke :Sign,
           data,   data.size,
           result, result.size,
           @internal
 
-      result.read_string
+      result.read_string(result_length)
     end
 
     def verify(data_with_signature)
-      Library.invoke :Verify,
+      retval = Library.Crypt_Verify \
           data_with_signature, data_with_signature.size,
           nil, nil,
           @internal
+
+      if retval == -20 # VERIFY
+        false
+      else
+        Library.handle_error("Crypt_Verify", retval)
+        true
+      end
     end
   end
 end
