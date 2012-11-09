@@ -5,11 +5,17 @@ module CyberplatPKI::Library
 
   if defined?(Rubinius) # Fuck you.
     if Rubinius.windows?
-      tuple = "windows-#{FFI::Platform::ARCH}"
+      tuple = "windows-"
     elsif RUBY_PLATFORM =~ /linux/
-      tuple = "linux-#{FFI::Platform::ARCH}"
+      tuple = "linux-"
     else
-      tuple = "unknown"
+      tuple = "unknown-"
+    end
+
+    if FFI::Platform::ARCH =~ /x86_64/
+      tuple << "x86_64"
+    elsif FFI::Platform::ARCH =~ /(i.?|x)86/
+      tuple << "i386"
     end
   else
     tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ARCH}"
