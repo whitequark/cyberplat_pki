@@ -3,7 +3,17 @@ require 'ffi'
 module CyberplatPKI::Library
   extend FFI::Library
 
-  tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ARCH}"
+  if defined?(Rubinius) # Fuck you.
+    if Rubinius.windows?
+      tuple = "windows-#{FFI::Platform::ARCH}"
+    elsif RUBY_PLATFORM =~ /linux/
+      tuple = "linux-#{FFI::Platform::ARCH}"
+    else
+      tuple = "unknown"
+    end
+  else
+    tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ARCH}"
+  end
 
   if tuple == 'windows-i386'
     ffi_lib File.expand_path('../../../ext/libipriv32.dll', __FILE__)
