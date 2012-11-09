@@ -3,14 +3,14 @@ require 'ffi'
 module CyberplatPKI::Library
   extend FFI::Library
 
-  if FFI::Platform::OS == 'windows' &&
-        FFI::Platform::ARCH == 'i386'
+  tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ARCH}"
+
+  if tuple == 'windows-i386'
     ffi_lib File.expand_path('../../../ext/libipriv32.dll', __FILE__)
-  if FFI::Platform::OS == 'linux' &&
-        FFI::Platform::ARCH == 'i386'
+  elsif tuple == 'linux-i386'
     ffi_lib File.expand_path('../../../ext/libipriv-linux32.so', __FILE__)
   else
-    raise "CyberplatPKI: unsupported platform #{FFI::Platform::OS}/#{FFI::Platform::ARCH}."
+    raise "CyberplatPKI: unsupported platform #{tuple}."
   end
 
   Errors = {
