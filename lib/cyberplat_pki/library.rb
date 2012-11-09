@@ -3,12 +3,14 @@ require 'ffi'
 module CyberplatPKI::Library
   extend FFI::Library
 
-  if RUBY_PLATFORM =~ /win32/
+  if FFI::Platform::OS == 'windows' &&
+        FFI::Platform::ARCH == 'i386'
     ffi_lib File.expand_path('../../../ext/libipriv32.dll', __FILE__)
-  elsif RUBY_PLATFORM =~ /i.86-linux/
-    ffi_lib File.expand_path('../../../ext/libipriv-i686.so', __FILE__)
+  if FFI::Platform::OS == 'linux' &&
+        FFI::Platform::ARCH == 'i386'
+    ffi_lib File.expand_path('../../../ext/libipriv-linux32.so', __FILE__)
   else
-    raise "CyberplatPKI: unsupported platform #{RUBY_PLATFORM}."
+    raise "CyberplatPKI: unsupported platform #{FFI::Platform::OS}/#{FFI::Platform::ARCH}."
   end
 
   Errors = {
