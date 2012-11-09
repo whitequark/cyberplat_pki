@@ -3,7 +3,7 @@ require 'ffi'
 module CyberplatPKI::Library
   extend FFI::Library
 
-  if defined?(Rubinius) # Fuck you.
+  if defined?(Rubinius) # Not very consistent.
     if Rubinius.windows?
       tuple = "windows-"
     elsif RUBY_PLATFORM =~ /linux/
