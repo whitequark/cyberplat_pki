@@ -55,7 +55,7 @@ module CyberplatPKI
 
       result_length = Library.invoke :Sign,
           data,   data.size,
-          result, result.size,
+          result, result.total,
           @internal
 
       result.read_string(result_length)
