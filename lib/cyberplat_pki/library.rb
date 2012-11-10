@@ -12,18 +12,14 @@ module CyberplatPKI::Library
       tuple = "unknown-"
     end
 
-    if FFI::Platform::ARCH =~ /x86_64/
-      tuple << "x86_64"
-    elsif FFI::Platform::ARCH =~ /(i.?|x)86/
-      tuple << "i386"
-    end
+    tuple << "#{FFI::Platform::ADDRESS_SIZE}"
   else
-    tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ARCH}"
+    tuple = "#{FFI::Platform::OS}-#{FFI::Platform::ADDRESS_SIZE}"
   end
 
-  if tuple == 'windows-i386'
+  if tuple == 'windows-32'
     ffi_lib File.expand_path('../../../ext/libipriv32.dll', __FILE__)
-  elsif tuple == 'linux-i386'
+  elsif tuple == 'linux-32'
     ffi_lib File.expand_path('../../../ext/libipriv-linux32.so', __FILE__)
   else
     raise "CyberplatPKI: unsupported platform #{tuple}."
