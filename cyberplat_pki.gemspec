@@ -17,4 +17,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_development_dependency "rspec"
+  gem.add_dependency 'digest-crc' # For CRC24
+  gem.add_dependency 'crypt'      # For IDEA
 end
