@@ -16,6 +16,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency             "ffi"
   gem.add_development_dependency "rspec"
+  gem.add_dependency 'digest-crc' # For CRC24
+  gem.add_dependency 'crypt'      # For IDEA
+  gem.add_dependency "jruby-openssl" if RUBY_PLATFORM == "java"
+  gem.add_dependency "openssl" if RUBY_PLATFORM == "ruby"
 end
