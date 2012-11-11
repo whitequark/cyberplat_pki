@@ -19,7 +19,7 @@ describe CyberplatPKI::Key do
 
     lambda {
       CyberplatPKI::Key.new_public("foo", 17033)
-    }.should raise_error(/PUB_KEY_NOT_FOUND/)
+    }.should raise_error(/INVALID_FORMAT/)
   end
 
   it "should load private keys" do
