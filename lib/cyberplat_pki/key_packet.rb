@@ -28,7 +28,7 @@ module CyberplatPKI
 
       raise "CyberplatPKI: CRYPT_ERR_INVALID_PACKET_FORMAT (unsupported algorithm #{algorithm})" if algorithm != 1
 
-      key.key = OpenSSL::PKey::RSA.new DUMMY_RSA_KEY
+      key.key = OpenSSL::PKey::RSA.new
       key.key.n = io.read_mpi
       key.key.e = io.read_mpi
 
@@ -41,14 +41,5 @@ module CyberplatPKI
       io.write_mpi key.n
       io.write_mpi key.e
     end
-
-    # Dummy 32-bit RSA public key in PEM format.
-    # Used because OpenSSL::PKEY::RSA#new cannot create empty keys.
-    DUMMY_RSA_KEY = <<KEY
------BEGIN PUBLIC KEY-----
-MCAwDQYJKoZIhvcNAQEBBQADDwAwDAIFAMA1fSECAwEAAQ==
------END PUBLIC KEY-----
-KEY
-
   end
 end
