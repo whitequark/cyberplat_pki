@@ -19,4 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec"
   gem.add_dependency 'digest-crc' # For CRC24
   gem.add_dependency 'crypt'      # For IDEA
+  gem.add_dependency "jruby-openssl" if RUBY_PLATFORM == "java"
+  gem.add_dependency "openssl" if RUBY_PLATFORM == "ruby"
 end
