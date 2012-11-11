@@ -1,6 +1,10 @@
 # CyberplatPKI
 
-CyberplatPKI is an FFI binding for signing Cyberplat requests. It includes both Linux and Windows versions of Cyberplat-provided library as well as the necessary wrapping code.
+CyberplatPKI 1.0 is an FFI binding for signing Cyberplat requests. It includes both Linux and Windows versions of Cyberplat-provided library as well as the necessary wrapping code. Note that this version only works on 32-bit Linux and Windows.
+
+CyberplatPKI 2.0 is a pure-Ruby reimplementation of the reverse-engineered signing algorithm. It should be completely compatible with the vendor-provided library. This version works everywhere.
+
+Select the variant you'd like to install with the version specification. `gem 'cyberplat_pki', '~> 1.0'` requests the FFI version, and `gem 'cyberplat_pki', '~> 2.0'` requests the pure-Ruby one.
 
 ## Installation
 
