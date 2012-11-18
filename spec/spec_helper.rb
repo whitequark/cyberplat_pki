@@ -16,15 +16,18 @@ RSpec.configure do |config|
   config.order = 'random'
 end
 
-require 'time'
+if RUBY_ENGINE == 'ruby' &&
+      RUBY_PLATFORM =~ /i.86/
+  require 'time'
 
-if Time.now != Time.parse('5th November 2005 00:00 UTC')
-  puts "Travelling back in time..."
+  if Time.now != Time.parse('5th November 2005 00:00 UTC')
+    puts "Travelling back in time..."
 
-  mock_path = File.expand_path('../../ext/mock_the_clock/mock_the_clock.so', __FILE__)
-  exec "sh", "-c", "LD_PRELOAD=#{mock_path} #{$0}"
-else
-  puts "Time.now: #{Time.now}"
+    mock_path = File.expand_path('../../ext/mock_the_clock/mock_the_clock.so', __FILE__)
+    exec "sh", "-c", "LD_PRELOAD=#{mock_path} #{$0}"
+  else
+    puts "Time.now: #{Time.now}"
+  end
 end
 
 require 'cyberplat_pki'
