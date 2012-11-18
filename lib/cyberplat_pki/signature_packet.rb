@@ -35,8 +35,9 @@ module CyberplatPKI
       io.write metadata
       io.write [ 1, 1 ].pack "CC"
       io.write hash_msw
-      io.write [ signature.length * 8 ].pack "n"
-      io.write signature
+
+      bn = OpenSSL::BN.new signature, 2
+      io.write_mpi bn
     end
   end
 end
