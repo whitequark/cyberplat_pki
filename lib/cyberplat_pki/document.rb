@@ -45,7 +45,10 @@ module CyberplatPKI
     end
 
     def self.encode64(data)
-      encoded = Base64.encode64(data).gsub /\n/, "\r\n"
+      encoded = Base64.encode64(data)
+      encoded.gsub!(/\n/, "")
+
+      encoded = encoded.scan(/.{1,64}/).join("\r\n") + "\r\n"
 
       crc = Digest::CRC24.checksum data
 
