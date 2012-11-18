@@ -15,7 +15,10 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-  gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
+
+  if RUBY_PLATFORM =~ /linux/
+    gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
+  end
 
   gem.add_dependency             "ffi"
   gem.add_development_dependency "rspec"
