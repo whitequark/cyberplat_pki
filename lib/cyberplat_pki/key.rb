@@ -89,7 +89,10 @@ module CyberplatPKI
       digest.update signature.metadata
       signature.hash_msw = digest.digest[0..1]
 
-      signature_block = Document.encode64 Packet.save([ signature ])
+      trust = TrustPacket.new
+      trust.trust = 0xC7.chr
+
+      signature_block = Packet.save([ signature, trust ])
 
       doc = Document.new
       doc.engine      = 1
@@ -98,7 +101,7 @@ module CyberplatPKI
       doc.ca          = KeyId.new '', 0
       doc.data_length = data.length
       doc.body        = data
-      doc.signature   = signature_block
+      doc.signature   = Document.encode64 signature_block
 
       text = Document.save [ doc ]
 
