@@ -24,7 +24,7 @@ if RUBY_ENGINE == 'ruby' &&
     if ENV['TIME_TRAVEL'] != '1'
       puts "Travelling back in time..."
 
-      ENV['TIME_TRAVEL'] = 1
+      ENV['TIME_TRAVEL'] = '1'
 
       mock_path = File.expand_path('../../ext/mock_the_clock/mock_the_clock.so', __FILE__)
       exec "sh", "-c", "LD_PRELOAD=#{mock_path} #{$0}"
