@@ -45,17 +45,15 @@ module CyberplatPKI
 
       packet_type = (PACKET_TYPES.key(packet.class) << 2) | 0x80
 
-      case data.length
-      when 0x00..0xFF
+      if data.length <= 0xFF && !packet.kind_of?(SignaturePacket) && !packet.kind_of?(KeyPacket)
         putc packet_type
         putc data.length
-
-      when 0x0100..0xFFFF
+      elsif data.length <= 0xFFFF
         putc packet_type | 1
 
         write [ data.length ].pack("n")
 
-      when 0x00010000..0xFFFFFFFF
+      else
         putc packet_type | 2
 
         write [ data.length ].pack("N")
