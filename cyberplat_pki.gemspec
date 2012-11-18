@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |gem|
   gem.name          = "cyberplat_pki"
-  gem.version       = "2.0.3"
+  gem.version       = "2.0.4"
   gem.authors       = ["Peter Zotov"]
   gem.email         = ["whitequark@whitequark.org"]
   gem.description   = %q{CyberplatPKI is a library for signing Cyberplat requests.}
@@ -15,10 +15,7 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-
-  if RUBY_PLATFORM =~ /linux/
-    gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
-  end
+  gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
 
   gem.add_development_dependency "rspec"
   gem.add_dependency 'digest-crc'    # For CRC24

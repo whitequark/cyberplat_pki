@@ -1,1 +1,3 @@
-system "make"
+if RUBY_PLATFORM =~ /linux/
+  system "make"
+end
