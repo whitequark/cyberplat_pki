@@ -16,20 +16,20 @@ RSpec.configure do |config|
   config.order = 'random'
 end
 
-if RUBY_ENGINE == 'ruby' &&
-      RUBY_PLATFORM =~ /i.86/
+if ENV['TIME_TRAVEL']
   require 'time'
 
   if Time.now != Time.parse('5th November 2005 00:00 UTC')
-    if ENV['TIME_TRAVEL'] != '1'
+    if ENV['DO_TIME_TRAVEL'] != '1'
       puts "Travelling back in time..."
 
-      ENV['TIME_TRAVEL'] = '1'
+      ENV['DO_TIME_TRAVEL'] = '1'
 
       mock_path = File.expand_path('../../ext/mock_the_clock/mock_the_clock.so', __FILE__)
       exec "sh", "-c", "LD_PRELOAD=#{mock_path} #{$0}"
     else
-      puts "Time machine failure, continuing."
+      puts "Time machine failure."
+      exit! 1
     end
   else
     puts "Time.now: #{Time.now}"
