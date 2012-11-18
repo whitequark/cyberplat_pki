@@ -15,11 +15,14 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-  gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
+
+  if RUBY_PLATFORM =~ /linux/
+    gem.extensions    = ["ext/mock_the_clock/extconf.rb"]
+  end
 
   gem.add_development_dependency "rspec"
-  gem.add_dependency 'digest-crc' # For CRC24
-  gem.add_dependency 'crypt'      # For IDEA
-  gem.add_dependency "jruby-openssl" if RUBY_PLATFORM == "java"
-  gem.add_dependency "openssl" if RUBY_PLATFORM == "ruby"
+  gem.add_dependency 'digest-crc'    # For CRC24
+  gem.add_dependency 'crypt'         # For IDEA
+  gem.add_dependency "jruby-openssl" if RUBY_ENGINE == "jruby"
+  gem.add_dependency "openssl"       if RUBY_ENGINE == "ruby"
 end
