@@ -70,6 +70,11 @@ module CyberplatPKI
     end
 
     def sign(data)
+      unless data.encoding.names.include?("BINARY")
+        original_encoding = data.encoding
+        data = data.dup.force_encoding("BINARY")
+      end
+
       signature = SignaturePacket.new
 
       signature.metadata = [
@@ -104,6 +109,8 @@ module CyberplatPKI
       doc.signature   = Document.encode64 signature_block
 
       text = Document.save [ doc ]
+
+      text.force_encoding original_encoding unless original_encoding.nil?
 
       text
     end
