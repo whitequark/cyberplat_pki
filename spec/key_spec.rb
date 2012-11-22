@@ -54,6 +54,10 @@ OIi4jaGbW8jFrxnUj5AaoeA/WJtFuBayNdBmyiQpeisngU6XsAHH
 END SIGNATURE
   SIGNED
 
+  HELLO_WORLD = <<-HELLO_WORLD
+z/Do4uXyLCDs6PAhCg==
+HELLO_WORLD
+
   it "can sign and then verify block" do
     privkey = CyberplatPKI::Key.new_private(@seckey, '1111111111')
     pubkey = CyberplatPKI::Key.new_public(@pubkey, 17033)
@@ -73,5 +77,13 @@ END SIGNATURE
 
     fail_signed = SIGNED.sub('world', 'wor1d')
     pubkey.verify(fail_signed).should be_false
+  end
+
+  it "properly handles Windows-1251 strings" do
+    privkey = CyberplatPKI::Key.new_private(@seckey, '1111111111')
+
+    signed = privkey.sign Base64.decode64(HELLO_WORLD).force_encoding('Windows-1251')
+
+    signed.encoding.names.include?("Windows-1251").should be_true
   end
 end
